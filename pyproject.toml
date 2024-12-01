@@ -13,7 +13,7 @@ telethon = "1.24.0"
 python-telegram-bot = "*"
 requests = "*"
 gunicorn = "20.1.0"
-aiohttp = { version = "3.8.1", extras = ["no_pep517"] }
+aiohttp = { version = "3.9.0", extras = ["no_pep517"] }
 
 [tool.poetry.dev-dependencies]
 # Add any development dependencies here if needed
