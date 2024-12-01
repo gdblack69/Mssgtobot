@@ -42,30 +42,36 @@ async def handle_disconnection():
 # Event handler for messages in the source chat
 @source_client.on(events.NewMessage(chats=SOURCE_CHAT_ID))
 async def forward_message(event):
-    # Extract the original message
-    source_id_message = event.raw_text
+    # Debugging: Print the raw text of the message received
+    print(f"New message received: {event.raw_text}")
 
-    # Custom message format with highlighted source message
-    custom_message = f"""
+    # Check if the message is inside double quotes
+    if '"' in event.raw_text:
+        # Extract the quoted message (trading signal)
+        source_id_message = event.raw_text
+
+        # Prepare custom message format for forwarding
+        custom_message = f"""
 "{source_id_message}"
 
- If the quoted text within double quotation mark is not a trading signal, respond with "Processing your question....". If it is a trading signal, extract the necessary information and fill out the form below. The symbol should be paired with USDT. Use the highest entry price. The stop loss price will be taken from inside the double quotation mark and if it is not given then calculate it as 0.5% below the entry price. Use the lowest take profit price given inside the double quoted message and if none is provided then calculate take profit price as 2% above the entry price.Provide only the completed form, no other text.[Remember inside the double quotation mark 'cmp'= current market price, 'sl'= stop loss, 'tp'=take profit]
+If the quoted text within double quotation marks is not a trading signal, respond with "Processing your question....". If it is a trading signal, extract the necessary information and fill out the form below. The symbol should be paired with USDT. The stop loss price will be taken from inside the double quotation marks and if it is not given, calculate it as 0.5% below the entry price. Use the lowest take profit price given inside the double quoted message, and if none is provided, calculate the take profit price as 2% above the entry price. Provide only the completed form, no other text. 
 
+[Remember inside the double quotation mark: 'cmp' = current market price, 'sl' = stop loss, 'tp' = take profit]
 
 Symbol:
 Price:
 Stop Loss:
 Take Profit:
-Take Profit:
 """
 
-    # Send the formatted message to the bot
-    async with destination_client:
+        # Send the formatted message to the bot
         try:
             await destination_client.send_message(DESTINATION_BOT_USERNAME, custom_message)
             print("Custom message forwarded to destination bot.")
         except Exception as e:
             print(f"Error while forwarding the message: {e}")
+    else:
+        print("Message does not contain a trading signal.")
 
 # Main function to start both clients
 async def main():
