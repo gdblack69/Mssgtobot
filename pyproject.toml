@@ -6,13 +6,13 @@ authors = ["Your Name <your.email@example.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.12.7"
+python = "^3.9.1"
 Flask = "2.1.3"
 telethon = "1.24.0"
 python-telegram-bot = "*"
 requests = "*"
 gunicorn = "20.1.0"
-aiohttp = "3.8.1"
+aiohttp = { version = "3.8.1", extras = ["no_pep517"] }
 
 [tool.poetry.dev-dependencies]
 # Add any development dependencies here if needed
